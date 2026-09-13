@@ -1,0 +1,6 @@
+# The pages are welcome. The chart is a 48 MB file and the predictions are 6 MB, and a
+# crawler that walks them is spending somebody's bandwidth to index bytes it can't read.
+User-agent: *
+Disallow: /map/
+Disallow: /data/
+Allow: /

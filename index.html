@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hudson Current</title>
+  <meta name="description" content="Tide and current planning for the Hudson River and New York Harbor. Not for navigation.">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#9fd8e8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Hudson Current">
+  <script type="module" crossorigin src="/assets/home-0Sv-m1yW.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-JeaMI12S.js">
+  <link rel="modulepreload" crossorigin href="/assets/basemap-D-msLCfm.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-Rr8RWQWC.css">
+  <link rel="stylesheet" crossorigin href="/assets/basemap-DNVN2dqC.css">
+</head>
+<body>
+  <main id="phone">
+    <section id="sky">
+      <a id="settings-btn" href="/settings.html" aria-label="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5"/>
+            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(45 12 12)"/>
+            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(90 12 12)"/>
+            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(135 12 12)"/>
+            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(180 12 12)"/>
+            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(225 12 12)"/>
+            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(270 12 12)"/>
+            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(315 12 12)"/>
+          </g>
+          <circle cx="12" cy="12" r="6.2" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        </svg>
+      </a>
+      <svg id="sky-icon" viewBox="0 0 64 64" aria-hidden="true"></svg>
+      <div class="sky-text">
+        <div class="sky-temp-row">
+          <div id="sky-temp">–</div>
+          <div class="mono sky-unit">°F</div>
+        </div>
+        <div id="sky-desc">Loading forecast…</div>
+        <div class="mono" id="sky-hum"></div>
+        <div class="mono" id="sky-conf"></div>
+      </div>
+    </section>
+
+    <div id="middle">
+      <button id="mini-wrap" type="button" aria-label="Open the full chart">
+        <div id="mini"></div>
+        <div id="mini-mk"></div>
+        <div id="mini-msg" class="mono" hidden></div>
+        <div class="mini-attrib mono">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div>
+        <div class="expand" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M9.5 2.5 h4 v4 M13.5 2.5 L9.2 6.8 M6.5 13.5 h-4 v-4 M2.5 13.5 L6.8 9.2" fill="none" stroke="oklch(0.33 0.06 230)" stroke-width="1.6" stroke-linecap="square"/></svg>
+        </div>
+      </button>
+
+      <div id="metrics">
+        <div class="metric" id="m-cond">
+          <div class="mlabel">Conditions</div>
+          <div class="mval" id="cond-val">–</div>
+          <div class="msub" id="cond-sub"></div>
+          <div class="msub mnote" id="cond-note" hidden></div>
+          <svg id="cond-waves" viewBox="0 0 128 14" aria-hidden="true"></svg>
+        </div>
+
+        <div class="metric" id="m-tide">
+          <div class="mlabel">Tide</div>
+          <div class="mval" id="tide-val">–</div>
+          <div class="msub" id="tide-sub"></div>
+          <div class="msub" id="tide-hw"></div>
+          <div class="msub mnote" id="tide-src"></div>
+          <svg id="tide-strip" viewBox="0 0 128 22" aria-hidden="true"></svg>
+        </div>
+
+        <div class="metric" id="m-wind">
+          <div class="mlabel">Wind · forecast</div>
+          <div class="mval" id="wind-val">–</div>
+          <div class="msub" id="wind-sub"></div>
+          <div class="msub mnote" id="wind-note" hidden></div>
+          <svg id="wind-dial" viewBox="0 0 26 26" aria-hidden="true"></svg>
+        </div>
+      </div>
+    </div>
+
+    <section id="dialpanel">
+      <div class="dial-head">
+        <div class="mono" id="dial-time">–</div>
+        <div class="mono" id="dial-date"></div>
+        <button class="mono" id="now-btn" type="button" hidden>NOW</button>
+      </div>
+      <div id="daily-days" role="tablist" aria-label="Day"></div>
+      <div id="daily-hours" aria-label="Hour"></div>
+      <div id="daily-scale"></div>
+      <div id="home-credit" class="mono">Weather by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · tides and currents NOAA · <a href="/settings.html">sources</a></div>
+    </section>
+
+  </main>
+</body>
+</html>

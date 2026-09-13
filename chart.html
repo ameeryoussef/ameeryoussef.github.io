@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hudson Current · Chart</title>
+  <meta name="description" content="Current chart for the Hudson River and New York Harbor. Not for navigation.">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#9fd8e8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Hudson Current">
+  <script type="module" crossorigin src="/assets/chart-D5zLl4td.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-JeaMI12S.js">
+  <link rel="modulepreload" crossorigin href="/assets/basemap-D-msLCfm.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-Rr8RWQWC.css">
+  <link rel="stylesheet" crossorigin href="/assets/basemap-DNVN2dqC.css">
+</head>
+<body>
+  <main id="phone" class="chart-view">
+    <header id="topbar">
+      <a id="back-home" href="/" aria-label="Home">
+        <svg viewBox="0 0 16 16"><path d="M2 7.4 L8 2.2 L14 7.4 M3.7 6.2 V13.4 H12.3 V6.2" fill="none" stroke="oklch(0.36 0.06 230)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="divider"></div>
+      <button id="loc-btn" type="button" aria-haspopup="dialog">
+        <span class="mono" id="top-loc">HOBOKEN</span>
+        <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 4 L5 7 L8 4" fill="none" stroke="oklch(0.45 0.05 240)" stroke-width="1.5"/></svg>
+      </button>
+      <div class="top-right">
+        <div class="mono" id="top-state"></div>
+        <div class="mono" id="top-conf"></div>
+      </div>
+    </header>
+
+    <div id="mapwrap">
+      <div id="map"></div>
+      <div id="mk"></div>
+      <div id="map-msg" class="mono" hidden></div>
+
+      <div id="card" hidden role="dialog" aria-live="polite">
+        <div class="card-head">
+          <div id="card-name"></div>
+          <button id="card-close" type="button" class="mono" aria-label="Close station details">CLOSE</button>
+        </div>
+        <div class="mono" id="card-now"></div>
+        <div class="mono" id="card-next"></div>
+        <div class="mono" id="card-sea" hidden></div>
+        <div class="mono card-meta" id="card-meta"></div>
+      </div>
+
+      <div id="layers">
+        <div id="layers-menu" hidden>
+          <button data-layer="current" type="button"><span class="mono">CURRENT</span><span class="chk"></span></button>
+          <button data-layer="wind" type="button"><span class="mono">WIND FORECAST</span><span class="chk"></span></button>
+          <button data-layer="stations" type="button"><span class="mono">STATIONS</span><span class="chk"></span></button>
+        </div>
+        <button id="layers-btn" type="button" aria-label="Map layers" aria-expanded="false">
+          <svg viewBox="0 0 18 18"><path d="M9 2 L16 6 L9 10 L2 6 Z M2 9.6 L9 13.6 L16 9.6" fill="none" stroke="oklch(0.33 0.06 230)" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div id="legend"><div class="mono" id="leg-sub"></div></div>
+      <button id="info-btn" type="button" aria-label="Sources and credits" aria-expanded="false">i</button>
+      <div id="info-panel" class="mono" hidden>
+        <div>Base map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, ODbL. Tiles by <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>.</div>
+        <div>Weather data by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</div>
+        <div>Tides and currents: NOAA CO-OPS. Warnings: National Weather Service. Both as is, no warranty, no endorsement.</div>
+        <div>Labelled arrows are NOAA station predictions. The small arrows between them are worked out from the nearest stations in the same waterway — the pattern of the stream, not a reading.</div>
+        <div><a href="/settings.html">All sources and licences</a></div>
+        <div id="info-nav">NOT FOR NAVIGATION</div>
+      </div>
+    </div>
+
+    <section id="dialpanel">
+      <div class="dial-head">
+        <div class="mono" id="dial-time">–</div>
+        <div class="mono" id="dial-date"></div>
+        <button class="mono" id="now-btn" type="button" hidden>NOW</button>
+      </div>
+      <div id="daily-days" role="tablist" aria-label="Day"></div>
+      <div id="daily-hours" aria-label="Hour"></div>
+      <div id="daily-scale"></div>
+    </section>
+
+    <div id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet-card">
+        <div class="sheet-head">
+          <div class="mono" id="sheet-title">STATION</div>
+          <button id="sheet-close" class="mono" type="button">CLOSE</button>
+        </div>
+        <div id="sheet-list"></div>
+        <div class="sheet-foot mono">A look at another station, just here. Your home port is set in <a href="/settings.html">settings</a>.</div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

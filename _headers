@@ -1,0 +1,24 @@
+# Netlify-style cache rules (ignored by hosts that don't read this file).
+
+# The pages and the worker must always be checked, or an update never arrives.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Fingerprinted by the build: safe to keep for a year.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Predictions are a fixed year; the map is rebuilt once or twice a year. A day of
+# browser caching is plenty, since the app keeps its own copies anyway.
+/data/*
+  Cache-Control: public, max-age=86400
+/map/*
+  Cache-Control: public, max-age=86400
+  Accept-Ranges: bytes
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

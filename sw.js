@@ -11,7 +11,7 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-66620a5d66", DATA = "hc-data-6d675b22dd", MAP = "hc-map-fc369ed0f5";
+const SHELL = "hc-shell-0f093b1aa5", DATA = "hc-data-6d675b22dd", MAP = "hc-map-fc369ed0f5";
 const MAP_FILE = "/map/hudson.pmtiles";
 const DONE = "/__predictions-complete";   // marker: the whole year is saved, not just what was browsed
 

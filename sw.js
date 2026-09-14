@@ -11,7 +11,7 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-9478d5450d", DATA = "hc-data-6d675b22dd", MAP = "hc-map-fc369ed0f5";
+const SHELL = "hc-shell-a360f070a3", DATA = "hc-data-6d675b22dd", MAP = "hc-map-fc369ed0f5";
 const MAP_FILE = "/map/hudson.pmtiles";
 const DONE = "/__predictions-complete";   // marker: the whole year is saved, not just what was browsed
 
@@ -30,8 +30,14 @@ const CORE = [
   ...APP_DATA,
 ];
 
+// Every copy the worker saves is fetched fresh from the server, bypassing the browser's
+// own download cache. Saving through that cache once stored a day-old fetch.json — Netlify
+// told browsers to keep /data/ files for 24 hours — and the worker then served the stale
+// copy indefinitely: stations with no measured open water, and no wave estimates.
+const fresh = url => new Request(url, { cache: "reload" });
+
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(SHELL).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(SHELL).then(c => c.addAll(CORE.map(fresh))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", e => {
@@ -152,7 +158,7 @@ async function ensureSaved({ metered = false, mapOptOut = false } = {}, client) 
 async function savePredictions(client) {
   try {
     const cache = await caches.open(DATA);
-    const list = await (await fetch("/data/stations.json")).json();
+    const list = await (await fetch(fresh("/data/stations.json"))).json();
     const urls = [
       ...list.stations.filter(s => s.type !== "W").map(s => `/data/currents/${s.id}.json`),
       ...list.tideStations.map(t => `/data/tides/${t.id}.json`),
@@ -160,7 +166,7 @@ async function savePredictions(client) {
     let done = 0;
     for (const url of urls) {
       if (!(await cache.match(url))) {
-        const res = await fetch(url);
+        const res = await fetch(fresh(url));
         if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
         await cache.put(url, res);
       }
@@ -177,7 +183,7 @@ async function savePredictions(client) {
 async function saveMap(client) {
   try {
     const cache = await caches.open(MAP);
-    const res = await fetch(MAP_FILE);
+    const res = await fetch(fresh(MAP_FILE));
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const total = Number(res.headers.get("content-length")) || 0;
     const reader = res.body.getReader();

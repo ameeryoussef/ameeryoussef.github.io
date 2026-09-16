@@ -2,62 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Hudson Current · Settings</title>
-  <meta name="description" content="Preferences and sources for Hudson Current.">
-  <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/fonts/fonts.css">
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#9fd8e8">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Hudson Current">
-  <script type="module" crossorigin src="/assets/settings-sQ_bo29N.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-C-1zfl99.js">
-  <link rel="modulepreload" crossorigin href="/assets/names-Dyqru78E.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-IBrTFqq3.css">
+  <meta name="robots" content="noindex">
+  <!-- Settings now opens as a layer on the home screen. This page only exists so older
+       links, bookmarks and home-screen shortcuts still land somewhere sensible. -->
+  <script>location.replace("/?settings=1" + (location.search.includes("t=") ? "&" + location.search.slice(1) : ""));</script>
 </head>
-<body>
-  <main id="phone" class="settings-view">
-    <header id="settings-bar">
-      <a id="back-home" href="/" aria-label="Back">
-        <svg viewBox="0 0 12 12"><path d="M7.5 1.5 L3 6 L7.5 10.5" fill="none" stroke="oklch(0.36 0.06 230)" stroke-width="1.7"/></svg>
-      </a>
-      <div class="mono" id="settings-title">SETTINGS</div>
-    </header>
-
-    <div class="row">
-      <div class="rlabel" id="station-label">Default port of call</div>
-      <div class="dropdown">
-        <button id="station-btn" type="button" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="station-label station-btn">
-          <span id="station-current"></span>
-          <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.4 L6 8.2 L10 4.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="dd-wrap" id="station-wrap"><div class="dd-inner"><ul id="station-list" role="listbox" aria-labelledby="station-label"></ul></div></div>
-      </div>
-      <div class="mono rnote" id="station-note"></div>
-    </div>
-
-    <div class="row">
-      <div class="rlabel">Wind units</div>
-      <div id="unit" role="group" aria-label="Wind units">
-        <button data-u="mph" type="button">MPH</button>
-        <button data-u="kn" type="button">KNOTS</button>
-      </div>
-      <div class="mono rnote">Current and boat speed stay in knots.</div>
-    </div>
-
-    <footer id="credits">
-      <div class="mono">Base map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, under the Open Database Licence. Tiles by <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>.</div>
-      <div class="mono">Weather data by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> — rounded for display, and converted to knots when that unit is chosen.</div>
-      <div class="mono">Tides and currents from NOAA CO-OPS; warnings from the National Weather Service. Both are supplied as is, without warranty. Speeds between NOAA's published slack and maximum times are worked out by this app, so they are not official NOAA figures. Not endorsed by or affiliated with NOAA or the NWS.</div>
-      <div class="mono">Wave heights are all estimated.</div>
-      <div class="mono">Charts, wind and tide predictions are downloaded for offline use.</div>
-      <div class="mono" id="cache-note"></div>
-      <div class="mono"><a href="/licenses.txt" target="_blank" rel="noopener">Software licences</a></div>
-      <div class="mono" id="not-nav">NOT FOR NAVIGATION</div>
-    </footer>
-  </main>
-</body>
+<body><noscript><a href="/?settings=1">Settings</a></noscript></body>
 </html>

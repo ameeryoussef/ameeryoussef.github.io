@@ -13,11 +13,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Hudson Current">
-  <script type="module" crossorigin src="/assets/home-CbiAMaAe.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-C-1zfl99.js">
-  <link rel="modulepreload" crossorigin href="/assets/basemap-MlkKYOON.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-IBrTFqq3.css">
-  <link rel="stylesheet" crossorigin href="/assets/basemap-DNVN2dqC.css">
+  <script type="module" crossorigin src="/assets/home-CBl4YAtN.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-DmuopY7O.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-BJbf9Et7.css">
 </head>
 <body>
   <main id="phone">
@@ -26,16 +24,16 @@
         <g id="refresh-ticks"></g>
       </svg>
     </div>
+    <button id="settings-btn" type="button" aria-expanded="false" aria-controls="settings-panel" aria-label="Settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="6.6" stroke-width="1.5"/>
+        <circle cx="12" cy="12" r="2.5" stroke-width="1.5"/>
+        <path d="M12 3.4v2.2M12 18.4v2.2M20.6 12h-2.2M5.6 12H3.4M18.08 5.92l-1.56 1.56M7.48 16.52l-1.56 1.56M18.08 18.08l-1.56-1.56M7.48 7.48 5.92 5.92" stroke-width="2.6"/>
+      </svg>
+    </button>
     <section id="sky">
       <div class="sky-layer" id="sky-a"></div>
       <div class="sky-layer" id="sky-b"></div>
-      <a id="settings-btn" href="/settings.html" aria-label="Settings">
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="6.6" stroke-width="1.5"/>
-          <circle cx="12" cy="12" r="2.5" stroke-width="1.5"/>
-          <path d="M12 3.4v2.2M12 18.4v2.2M20.6 12h-2.2M5.6 12H3.4M18.08 5.92l-1.56 1.56M7.48 16.52l-1.56 1.56M18.08 18.08l-1.56-1.56M7.48 7.48 5.92 5.92" stroke-width="2.6"/>
-        </svg>
-      </a>
       <svg id="sky-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></svg>
       <div class="sky-text">
         <div class="sky-temp-row">
@@ -111,7 +109,44 @@
       </div>
     </section>
 
-    <div id="home-credit">Weather by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · tides and currents NOAA · <a href="/settings.html">sources</a></div>
+    <div id="home-credit">Weather by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · tides and currents NOAA · <button type="button" class="linkish" id="credit-settings">sources</button></div>
+
+    <!-- Settings is a layer over the home screen, not a page: the gear opens and closes it
+         and it is only as tall as it needs to be (Motion 3f's timings). -->
+    <div id="settings-scrim" hidden></div>
+    <section id="settings-panel" hidden aria-label="Settings">
+    <div class="row" style="--i:0">
+      <div class="rlabel" id="station-label">Default port of call</div>
+      <div class="dropdown">
+        <button id="station-btn" type="button" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="station-label station-btn">
+          <span id="station-current"></span>
+          <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.4 L6 8.2 L10 4.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dd-wrap" id="station-wrap"><div class="dd-inner"><ul id="station-list" role="listbox" aria-labelledby="station-label"></ul></div></div>
+      </div>
+      <div class="mono rnote" id="station-note"></div>
+    </div>
+
+    <div class="row" style="--i:1">
+      <div class="rlabel">Wind units</div>
+      <div id="unit" role="group" aria-label="Wind units">
+        <button data-u="mph" type="button">MPH</button>
+        <button data-u="kn" type="button">KNOTS</button>
+      </div>
+      <div class="mono rnote">Current and boat speed stay in knots.</div>
+    </div>
+
+    <footer id="credits" class="row" style="--i:2">
+      <div class="mono">Base map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, under the Open Database Licence. Tiles by <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>.</div>
+      <div class="mono">Weather data by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> — rounded for display, and converted to knots when that unit is chosen.</div>
+      <div class="mono">Tides and currents from NOAA CO-OPS; warnings from the National Weather Service. Both are supplied as is, without warranty. Speeds between NOAA's published slack and maximum times are worked out by this app, so they are not official NOAA figures. Not endorsed by or affiliated with NOAA or the NWS.</div>
+      <div class="mono">Wave heights are all estimated.</div>
+      <div class="mono">Charts, wind and tide predictions are downloaded for offline use.</div>
+      <div class="mono" id="cache-note"></div>
+      <div class="mono"><a href="/licenses.txt" target="_blank" rel="noopener">Software licences</a></div>
+      <div class="mono" id="not-nav">NOT FOR NAVIGATION</div>
+    </footer>
+    </section>
   </main>
 </body>
 </html>

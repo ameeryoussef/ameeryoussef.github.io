@@ -13,9 +13,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Hudson Current">
-  <script type="module" crossorigin src="/assets/settings-Bx8BSuIN.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-Cni1YvOa.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-C_t_qdMf.css">
+  <script type="module" crossorigin src="/assets/settings-BB5x5vgy.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-_mjAf71Y.js">
+  <link rel="modulepreload" crossorigin href="/assets/names-DJ-toEN0.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-TP3y38xT.css">
 </head>
 <body>
   <main id="phone" class="settings-view">
@@ -27,10 +28,13 @@
     </header>
 
     <div class="row">
-      <label class="rlabel" for="station">Default port of call</label>
-      <div class="select-wrap">
-        <select id="station"></select>
-        <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3.2 L5 7 L9 3.2" fill="none" stroke="oklch(0.42 0.03 235)" stroke-width="1.6"/></svg>
+      <div class="rlabel" id="station-label">Default port of call</div>
+      <div class="dropdown">
+        <button id="station-btn" type="button" aria-expanded="false" aria-haspopup="listbox" aria-labelledby="station-label station-btn">
+          <span id="station-current"></span>
+          <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.4 L6 8.2 L10 4.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dd-wrap" id="station-wrap"><div class="dd-inner"><ul id="station-list" role="listbox" aria-labelledby="station-label"></ul></div></div>
       </div>
       <div class="mono rnote" id="station-note"></div>
     </div>

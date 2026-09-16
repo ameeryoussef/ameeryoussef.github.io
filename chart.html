@@ -13,10 +13,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Hudson Current">
-  <script type="module" crossorigin src="/assets/chart-Db7Oyd8k.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-Cni1YvOa.js">
-  <link rel="modulepreload" crossorigin href="/assets/basemap-3dowLkYp.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-C_t_qdMf.css">
+  <script type="module" crossorigin src="/assets/chart-Dve3XkC2.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-_mjAf71Y.js">
+  <link rel="modulepreload" crossorigin href="/assets/basemap-ezazaBy5.js">
+  <link rel="modulepreload" crossorigin href="/assets/names-DJ-toEN0.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-TP3y38xT.css">
   <link rel="stylesheet" crossorigin href="/assets/basemap-DNVN2dqC.css">
 </head>
 <body>
@@ -81,8 +82,11 @@
         <button class="mono" id="now-btn" type="button" hidden>NOW</button>
       </div>
       <div id="daily-days" role="tablist" aria-label="Day"></div>
-      <div id="daily-hours" aria-label="Hour"></div>
-      <div id="daily-scale"></div>
+      <div class="hour-block">
+        <div class="bubble-row"><div class="mono" id="hour-bubble"></div></div>
+        <div id="daily-hours" role="slider" tabindex="0" aria-label="Hour" aria-valuemin="0" aria-valuemax="23"></div>
+        <div id="daily-scale"></div>
+      </div>
     </section>
 
     <div id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">

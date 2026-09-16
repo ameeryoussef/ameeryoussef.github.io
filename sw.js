@@ -11,7 +11,7 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-0f093b1aa5", DATA = "hc-data-6d675b22dd", MAP = "hc-map-fc369ed0f5";
+const SHELL = "hc-shell-41494d66fb", DATA = "hc-data-6d675b22dd", MAP = "hc-map-fc369ed0f5";
 const MAP_FILE = "/map/hudson.pmtiles";
 const DONE = "/__predictions-complete";   // marker: the whole year is saved, not just what was browsed
 
@@ -25,8 +25,8 @@ const CORE = [
   "/", "/chart.html", "/settings.html", "/manifest.webmanifest",
   "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",
   "/fonts/fonts.css",
-  "/fonts/Archivo-400.woff2", "/fonts/Archivo-500.woff2", "/fonts/Archivo-600.woff2",
-  "/fonts/IBMPlexMono-400.woff2", "/fonts/IBMPlexMono-500.woff2",
+  "/fonts/Archivo-300.woff2", "/fonts/Archivo-400.woff2", "/fonts/Archivo-500.woff2", "/fonts/Archivo-600.woff2",
+  "/fonts/IBMPlexMono-400.woff2", "/fonts/IBMPlexMono-500.woff2", "/fonts/IBMPlexMono-600.woff2",
   ...APP_DATA,
 ];
 
@@ -75,13 +75,16 @@ async function cacheFirst(request, cacheName) {
   }
 }
 
+// Pages come straight from the network, and from the copy saved at install when there is
+// no network. Nothing is cloned into the cache on the way past: teeing a page's response
+// while the browser is still reading it delays the first paint, and the browser then gives
+// up on carrying the chart across between screens (Motion 3c). Every page is already in
+// CORE, refreshed whenever a new version installs.
 async function page(request) {
-  const cache = await caches.open(SHELL);
   try {
-    const res = await fetch(request);
-    if (res.ok) cache.put(request, res.clone());
-    return res;
+    return await fetch(request);
   } catch (e) {
+    const cache = await caches.open(SHELL);
     return (await cache.match(request, { ignoreSearch: true })) ?? (await cache.match("/")) ??
       new Response("Offline, and this page hasn't been saved yet.", { status: 504, headers: { "Content-Type": "text/plain" } });
   }

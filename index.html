@@ -13,31 +13,30 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Hudson Current">
-  <script type="module" crossorigin src="/assets/home-BFbR9pLM.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-Cni1YvOa.js">
-  <link rel="modulepreload" crossorigin href="/assets/basemap-3dowLkYp.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-C_t_qdMf.css">
+  <script type="module" crossorigin src="/assets/home-BIljoCYI.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-_mjAf71Y.js">
+  <link rel="modulepreload" crossorigin href="/assets/basemap-ezazaBy5.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-TP3y38xT.css">
   <link rel="stylesheet" crossorigin href="/assets/basemap-DNVN2dqC.css">
 </head>
 <body>
   <main id="phone">
+    <div id="refresh" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="oklch(0.42 0.02 248)" stroke-width="1.5" stroke-linecap="round">
+        <g id="refresh-ticks"></g>
+      </svg>
+    </div>
     <section id="sky">
+      <div class="sky-layer" id="sky-a"></div>
+      <div class="sky-layer" id="sky-b"></div>
       <a id="settings-btn" href="/settings.html" aria-label="Settings">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <g fill="currentColor">
-            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5"/>
-            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(45 12 12)"/>
-            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(90 12 12)"/>
-            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(135 12 12)"/>
-            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(180 12 12)"/>
-            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(225 12 12)"/>
-            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(270 12 12)"/>
-            <rect x="10.8" y="1.6" width="2.4" height="4.6" rx="0.5" transform="rotate(315 12 12)"/>
-          </g>
-          <circle cx="12" cy="12" r="6.2" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="6.6" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="2.5" stroke-width="1.5"/>
+          <path d="M12 3.4v2.2M12 18.4v2.2M20.6 12h-2.2M5.6 12H3.4M18.08 5.92l-1.56 1.56M7.48 16.52l-1.56 1.56M18.08 18.08l-1.56-1.56M7.48 7.48 5.92 5.92" stroke-width="2.6"/>
         </svg>
       </a>
-      <svg id="sky-icon" viewBox="0 0 64 64" aria-hidden="true"></svg>
+      <svg id="sky-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></svg>
       <div class="sky-text">
         <div class="sky-temp-row">
           <div id="sky-temp">–</div>
@@ -50,57 +49,69 @@
     </section>
 
     <div id="middle">
-      <button id="mini-wrap" type="button" aria-label="Open the full chart">
+      <a id="mini-wrap" href="/chart.html" aria-label="Open the full chart">
         <div id="mini"></div>
         <div id="mini-mk"></div>
         <div id="mini-msg" class="mono" hidden></div>
-        <div class="mini-attrib mono">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div>
         <div class="expand" aria-hidden="true">
-          <svg viewBox="0 0 16 16"><path d="M9.5 2.5 h4 v4 M13.5 2.5 L9.2 6.8 M6.5 13.5 h-4 v-4 M2.5 13.5 L6.8 9.2" fill="none" stroke="oklch(0.33 0.06 230)" stroke-width="1.6" stroke-linecap="square"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="oklch(0.33 0.04 240)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4H20v5.5M20 4l-6.2 6.2M9.5 20H4v-5.5M4 20l6.2-6.2"/></svg>
         </div>
-      </button>
+      </a>
+      <!-- Outside the link, not inside it: a link cannot contain a link, and the parser
+           splits the chart in two if it does — which breaks the shared map (Motion 3c). -->
+      <div class="mini-attrib mono">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div>
 
       <div id="metrics">
         <div class="metric" id="m-cond">
           <div class="mlabel">Conditions</div>
           <div class="mval" id="cond-val">–</div>
           <div class="msub" id="cond-sub"></div>
-          <div class="msub" id="cond-sea" hidden></div>
-          <div class="msub mnote" id="cond-note" hidden></div>
-          <svg id="cond-waves" viewBox="0 0 128 14" aria-hidden="true"></svg>
+          <svg id="cond-waves" viewBox="0 0 202 18" preserveAspectRatio="none" aria-hidden="true" fill="none"></svg>
         </div>
 
         <div class="metric" id="m-tide">
           <div class="mlabel">Tide</div>
-          <div class="mval" id="tide-val">–</div>
+          <div class="valrow">
+            <div class="mval" id="tide-val">–</div>
+            <div id="tide-rate"></div>
+          </div>
           <div class="msub" id="tide-sub"></div>
-          <div class="msub" id="tide-hw"></div>
-          <div class="msub mnote" id="tide-src"></div>
-          <svg id="tide-strip" viewBox="0 0 128 22" aria-hidden="true"></svg>
+          <svg id="tide-curve" viewBox="0 0 202 22" preserveAspectRatio="none" aria-hidden="true" fill="none"></svg>
         </div>
 
         <div class="metric" id="m-wind">
           <div class="mlabel">Wind</div>
-          <div class="mval" id="wind-val">–</div>
-          <div class="msub" id="wind-sub"></div>
-          <div class="msub mnote" id="wind-note" hidden></div>
-          <svg id="wind-dial" viewBox="0 0 26 26" aria-hidden="true"></svg>
+          <div class="windrow">
+            <div class="windcol">
+              <div class="windval">
+                <div class="mval" id="wind-val">–</div>
+                <div id="wind-unit">MPH</div>
+              </div>
+              <div class="msub" id="wind-sub"></div>
+            </div>
+            <svg id="wind-dial" viewBox="0 0 64 64" aria-hidden="true" fill="none"></svg>
+          </div>
         </div>
       </div>
     </div>
 
     <section id="dialpanel">
       <div class="dial-head">
-        <div class="mono" id="dial-time">–</div>
-        <div class="mono" id="dial-date"></div>
+        <div class="left">
+          <div class="mono" id="dial-time">–</div>
+          <div class="mono" id="dial-date"></div>
+        </div>
         <button class="mono" id="now-btn" type="button" hidden>NOW</button>
       </div>
       <div id="daily-days" role="tablist" aria-label="Day"></div>
-      <div id="daily-hours" aria-label="Hour"></div>
-      <div id="daily-scale"></div>
-      <div id="home-credit" class="mono">Weather by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · tides and currents NOAA · <a href="/settings.html">sources</a></div>
+      <div class="hour-block">
+        <div class="bubble-row"><div class="mono" id="hour-bubble"></div></div>
+        <div id="daily-hours" role="slider" tabindex="0" aria-label="Hour" aria-valuemin="0" aria-valuemax="23"></div>
+        <div id="daily-scale"><span>12 AM</span><span>6 AM</span><span>NOON</span><span>6 PM</span><span>11 PM</span></div>
+      </div>
     </section>
 
+    <div id="home-credit">Weather by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · tides and currents NOAA · <a href="/settings.html">sources</a></div>
   </main>
 </body>
 </html>

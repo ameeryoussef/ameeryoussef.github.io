@@ -1,4 +1,4 @@
-Hudson Current — third-party notices
+The Reach — third-party notices
 
 Data
   Base map: © OpenStreetMap contributors, Open Database License (ODbL).

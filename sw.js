@@ -1,4 +1,4 @@
-// Hudson Current — offline.
+// The Reach — offline.
 //
 // Three caches, kept apart because they are three different promises, and versioned
 // by what they hold (stamped at build time by scripts/stamp-sw.mjs) so a routine
@@ -11,7 +11,7 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-ed0306e0ca", DATA = "hc-data-6d675b22dd", MAP = "hc-map-fc369ed0f5";
+const SHELL = "hc-shell-21ff1e65e2", DATA = "hc-data-6d675b22dd", MAP = "hc-map-fc369ed0f5";
 const MAP_FILE = "/map/hudson.pmtiles";
 const DONE = "/__predictions-complete";   // marker: the whole year is saved, not just what was browsed
 
@@ -23,7 +23,7 @@ const APP_DATA = ["/data/fetch.json", "/data/stations.json"];
 
 const CORE = [
   "/", "/chart.html", "/settings.html", "/manifest.webmanifest",
-  "/icon.svg", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",
+  "/favicon-32.png", "/favicon-64.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",
   "/fonts/fonts.css",
   "/fonts/Archivo-300.woff2", "/fonts/Archivo-400.woff2", "/fonts/Archivo-500.woff2", "/fonts/Archivo-600.woff2",
   "/fonts/IBMPlexMono-400.woff2", "/fonts/IBMPlexMono-500.woff2", "/fonts/IBMPlexMono-600.woff2",

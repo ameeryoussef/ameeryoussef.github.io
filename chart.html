@@ -14,89 +14,110 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="The Reach">
-  <script type="module" crossorigin src="/assets/chart-C7cXSIz2.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-89YuHfj5.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-CW66tM6p.css">
+  <script type="module" crossorigin src="/assets/chart-DsbTJ7OU.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-CT0jG6lT.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-CXkAd267.css">
 </head>
 <body>
-  <main id="phone" class="chart-view">
-    <header id="topbar">
-      <a id="back-home" href="/" aria-label="Home">
-        <svg viewBox="0 0 16 16"><path d="M2 7.4 L8 2.2 L14 7.4 M3.7 6.2 V13.4 H12.3 V6.2" fill="none" stroke="oklch(0.36 0.06 230)" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      </a>
-      <div class="divider"></div>
-      <button id="loc-btn" type="button" aria-haspopup="dialog">
-        <span class="mono" id="top-loc">HOBOKEN</span>
-        <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 4 L5 7 L8 4" fill="none" stroke="oklch(0.45 0.05 240)" stroke-width="1.5"/></svg>
+  <!-- The full map (October handoff, option 1b): the chart edge to edge, with the
+       readings floating on top and the time floating at the bottom. Drag the map and the
+       readings follow the nearest port of call. -->
+  <main id="phone" class="chart-view fullmap">
+    <div id="map"></div>
+    <div id="mk"></div>
+    <div id="map-msg" class="mono" hidden></div>
+
+    <section id="topcard" class="fcard" aria-label="Readings">
+      <div class="tc-head">
+        <a id="exit" href="/" aria-label="Exit full map">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="oklch(0.33 0.04 240)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l6-6M10 14l-6 6"/></svg>
+        </a>
+        <div class="tc-name">
+          <div class="mono" id="st-lbl">NEAREST STATION</div>
+          <div id="station">–</div>
+        </div>
+        <svg id="tc-sky" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+        <div class="tc-wx">
+          <div id="tc-temp">–</div>
+          <div id="tc-desc"></div>
+        </div>
+      </div>
+      <div class="tc-rule"></div>
+      <div id="read">
+        <div class="rcol">
+          <div class="rlab mono">CONDITIONS</div>
+          <div class="rval" id="r-cond">–</div>
+          <svg id="r-waves" viewBox="0 0 202 18" preserveAspectRatio="none" aria-hidden="true" fill="none"></svg>
+          <div class="rsub" id="r-cond-sub"></div>
+        </div>
+        <div class="rcol">
+          <div class="rlab mono">TIDE</div>
+          <div class="rval" id="r-tide">–</div>
+          <div class="rfig mono" id="r-tide-rate"></div>
+          <div class="rsub" id="r-tide-sub"></div>
+        </div>
+        <div class="rcol">
+          <div class="rlab mono">WIND</div>
+          <div class="rwind"><div class="rval" id="r-wind">–</div><div class="mono runit" id="r-wind-unit">MPH</div></div>
+          <div class="rfig mono" id="r-wind-dir"></div>
+          <div class="rsub" id="r-wind-sub"></div>
+        </div>
+      </div>
+    </section>
+
+    <button id="info-btn" class="fbtn" type="button" aria-label="What the map shows, and sources" aria-expanded="false">i</button>
+    <div id="info-panel" class="mono fcard" hidden>
+      <div>Labelled arrows are NOAA station predictions. The small arrows between them are worked out from the nearest stations in the same waterway — the pattern of the stream, not a reading.</div>
+      <div>Drag the map and the readings follow the port of call nearest its centre.</div>
+      <div>Base map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, ODbL. Tiles by <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>. Weather by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Tides and currents: NOAA CO-OPS. Warnings: National Weather Service. As is, no warranty, no endorsement.</div>
+      <div><a href="/?settings=1">All sources and licences</a></div>
+      <div id="info-nav">NOT FOR NAVIGATION</div>
+    </div>
+    <div id="layers">
+      <button id="layers-btn" class="fbtn" type="button" aria-label="Map layers" aria-expanded="false">
+        <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2 L16 6 L9 10 L2 6 Z M2 9.6 L9 13.6 L16 9.6" fill="none" stroke="oklch(0.33 0.06 230)" stroke-width="1.4" stroke-linejoin="round"/></svg>
       </button>
-      <div class="top-right">
-        <div class="mono" id="top-state"></div>
-        <div class="mono" id="top-conf"></div>
-      </div>
-    </header>
-
-    <div id="mapwrap">
-      <div id="map"></div>
-      <div id="mk"></div>
-      <div id="map-msg" class="mono" hidden></div>
-
-      <div id="card" hidden role="dialog" aria-live="polite">
-        <div class="card-head">
-          <div id="card-name"></div>
-          <button id="card-close" type="button" aria-label="Close"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5 L9.5 9.5 M9.5 2.5 L2.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-        </div>
-        <div class="mono" id="card-now"></div>
-        <div class="mono" id="card-next"></div>
-        <div class="mono" id="card-sea" hidden></div>
-        <div class="mono card-meta" id="card-meta"></div>
-      </div>
-
-      <div id="layers">
-        <div id="layers-menu" hidden>
-          <button data-layer="current" type="button"><span class="mono">CURRENT</span><span class="chk"></span></button>
-          <button data-layer="wind" type="button"><span class="mono">WIND FORECAST</span><span class="chk"></span></button>
-          <button data-layer="stations" type="button"><span class="mono">STATIONS</span><span class="chk"></span></button>
-        </div>
-        <button id="layers-btn" type="button" aria-label="Map layers" aria-expanded="false">
-          <svg viewBox="0 0 18 18"><path d="M9 2 L16 6 L9 10 L2 6 Z M2 9.6 L9 13.6 L16 9.6" fill="none" stroke="oklch(0.33 0.06 230)" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
-      <div id="legend"><div class="mono" id="leg-sub"></div></div>
-      <button id="info-btn" type="button" aria-label="Sources and credits" aria-expanded="false">i</button>
-      <div id="info-panel" class="mono" hidden>
-        <div>Base map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, ODbL. Tiles by <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>.</div>
-        <div>Weather data by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</div>
-        <div>Tides and currents: NOAA CO-OPS. Warnings: National Weather Service. Both as is, no warranty, no endorsement.</div>
-        <div>Labelled arrows are NOAA station predictions. The small arrows between them are worked out from the nearest stations in the same waterway — the pattern of the stream, not a reading.</div>
-        <div><a href="/?settings=1">All sources and licences</a></div>
-        <div id="info-nav">NOT FOR NAVIGATION</div>
+      <div id="layers-menu" class="fcard" hidden>
+        <button data-layer="current" type="button"><span class="mono">CURRENT</span><span class="chk"></span></button>
+        <button data-layer="wind" type="button"><span class="mono">WIND FORECAST</span><span class="chk"></span></button>
+        <button data-layer="stations" type="button"><span class="mono">STATIONS</span><span class="chk"></span></button>
       </div>
     </div>
 
-    <section id="dialpanel">
-      <div class="dial-head">
-        <div class="mono" id="dial-time">–</div>
-        <div class="mono" id="dial-date"></div>
-        <button class="mono" id="now-btn" type="button" hidden>NOW</button>
+    <div id="card" class="fcard" hidden role="dialog" aria-live="polite">
+      <div class="card-head">
+        <div id="card-name"></div>
+        <button id="card-close" type="button" aria-label="Close"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5 L9.5 9.5 M9.5 2.5 L2.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
       </div>
-      <div id="daily-days" role="tablist" aria-label="Day"></div>
+      <div class="mono" id="card-now"></div>
+      <div class="mono" id="card-next"></div>
+      <div class="mono" id="card-sea" hidden></div>
+      <div class="mono card-meta" id="card-meta"></div>
+    </div>
+
+    <button id="home-btn" class="fbtn mono" type="button" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 4 3.5 10.5l7 3 3 7z"/></svg>
+      <span id="home-btn-text">BACK TO HOME</span>
+    </button>
+
+    <section id="timecard" class="fcard" aria-label="Time">
+      <div class="tm-head">
+        <div class="tm-time">
+          <div class="mono" id="dial-time">–</div>
+          <div class="mono" id="dial-date"></div>
+        </div>
+        <div class="tm-nav">
+          <button class="mono" id="now-btn" type="button">NOW</button>
+          <button id="day-prev" type="button" aria-label="Previous day"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="oklch(0.33 0.04 240)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button id="day-next" type="button" aria-label="Next day"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="oklch(0.33 0.04 240)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
       <div class="hour-block">
         <div class="bubble-row"><div class="mono" id="hour-bubble"></div></div>
         <div id="daily-hours" role="slider" tabindex="0" aria-label="Hour" aria-valuemin="0" aria-valuemax="23"></div>
         <div id="daily-scale"></div>
       </div>
     </section>
-
-    <div id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-      <div class="sheet-card">
-        <div class="sheet-head">
-          <div class="mono" id="sheet-title">STATION</div>
-          <button id="sheet-close" class="mono" type="button">CLOSE</button>
-        </div>
-        <div id="sheet-list"></div>
-        <div class="sheet-foot mono">A look at another station, just here. Your home port is set in <a href="/?settings=1">settings</a>.</div>
-      </div>
-    </div>
   </main>
 </body>
 </html>

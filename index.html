@@ -14,9 +14,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="The Reach">
-  <script type="module" crossorigin src="/assets/home-DRR4e4Yo.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-Chod2xRx.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-BgGW8wWu.css">
+  <script type="module" crossorigin src="/assets/home-BmzuogQ-.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-89YuHfj5.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-CW66tM6p.css">
 </head>
 <body>
   <main id="phone">
@@ -80,11 +80,12 @@
 
         <div class="metric" id="m-wind">
           <div class="mlabel">Wind</div>
+          <div class="mval" id="wind-val">–</div>
           <div class="windrow">
             <div class="windcol">
               <div class="windval">
-                <div class="mval" id="wind-val">–</div>
-                <div class="rate" id="wind-rate"><span id="wind-num">–</span> <span id="wind-unit">MPH</span></div>
+                <div id="wind-num">–</div>
+                <div id="wind-unit">MPH</div>
               </div>
               <div class="msub" id="wind-sub"></div>
             </div>
@@ -130,14 +131,23 @@
 
     <div class="row" style="--i:1">
       <div class="rlabel">Wind units</div>
-      <div id="unit" role="group" aria-label="Wind units">
+      <div id="unit" class="seg" role="group" aria-label="Wind units">
         <button data-u="mph" type="button">MPH</button>
         <button data-u="kn" type="button">KNOTS</button>
       </div>
       <div class="mono rnote">Current and boat speed stay in knots.</div>
     </div>
 
-    <footer id="credits" class="row" style="--i:2">
+    <div class="row" style="--i:2">
+      <div class="rlabel">Colours</div>
+      <div id="palette" class="seg" role="group" aria-label="Colours">
+        <button data-p="standard" type="button">STANDARD</button>
+        <button data-p="colourblind" type="button">COLOUR-BLIND</button>
+      </div>
+      <div class="mono rnote">For red-green colour blindness. Placid turns graphite and the bars deepen, so all four states stay apart.</div>
+    </div>
+
+    <footer id="credits" class="row" style="--i:3">
       <div class="mono">Base map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, under the Open Database Licence. Tiles by <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>.</div>
       <div class="mono">Weather data by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> — rounded for display, and converted to knots when that unit is chosen.</div>
       <div class="mono">Tides and currents from NOAA CO-OPS; warnings from the National Weather Service. Both are supplied as is, without warranty. Speeds between NOAA's published slack and maximum times are worked out by this app, so they are not official NOAA figures. Not endorsed by or affiliated with NOAA or the NWS.</div>

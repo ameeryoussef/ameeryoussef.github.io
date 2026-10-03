@@ -11,7 +11,7 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-b5f09eceeb", DATA = "hc-data-b49c33bf03", MAP = "hc-map-eed97fcbd2";
+const SHELL = "hc-shell-9805e07fdc", DATA = "hc-data-b49c33bf03", MAP = "hc-map-eed97fcbd2";
 const MAP_FILE = "/map/hudson.pmtiles";
 const DONE = "/__predictions-complete";   // marker: the whole year is saved, not just what was browsed
 
@@ -21,8 +21,13 @@ const DONE = "/__predictions-complete";   // marker: the whole year is saved, no
 // year of predictions because the data cache was given a new name.
 const APP_DATA = ["/data/fetch.json", "/data/stations.json"];
 
+// The app's own scripts and styles, by their built names (filled in by scripts/stamp-sw.mjs).
+// They are saved with the pages at install, so a new version is complete before it takes
+// over. They used to be saved only once a page had loaded them through the worker — so the
+// first open after every deploy needed the network for the app's own code.
+const ASSETS = ["/assets/chart-D5k9jE2f.js","/assets/home-D5drYoLc.js","/assets/offline-BfOZZTSe.js","/assets/offline-D_l-26T8.css"];
 const CORE = [
-  "/", "/chart.html", "/settings.html", "/manifest.webmanifest",
+  "/", "/chart.html", "/settings.html", "/manifest.webmanifest", ...ASSETS,
   "/favicon-32.png", "/favicon-64.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",
   "/fonts/fonts.css",
   "/fonts/Archivo-300.woff2", "/fonts/Archivo-400.woff2", "/fonts/Archivo-500.woff2", "/fonts/Archivo-600.woff2",
@@ -75,17 +80,20 @@ async function cacheFirst(request, cacheName) {
   }
 }
 
-// Pages come straight from the network, and from the copy saved at install when there is
-// no network. Nothing is cloned into the cache on the way past: teeing a page's response
-// while the browser is still reading it delays the first paint, and the browser then gives
-// up on carrying the chart across between screens (Motion 3c). Every page is already in
-// CORE, refreshed whenever a new version installs.
+// Pages come from the copy saved with this version, at once, whatever the signal is doing.
+// They used to come from the network first, falling back to the saved copy only when the
+// network failed — and a weak signal doesn't fail, it hangs, so the app sat blank for as
+// long as the phone kept trying (reproduced: still nothing after 25 seconds). The saved page
+// is also the right one: it matches the saved scripts beside it. A new version arrives with
+// the next worker, which saves its pages and scripts together before it takes over.
 async function page(request) {
+  const cache = await caches.open(SHELL);
+  const saved = await cache.match(request, { ignoreSearch: true });
+  if (saved) return saved;
   try {
     return await fetch(request);
   } catch (e) {
-    const cache = await caches.open(SHELL);
-    return (await cache.match(request, { ignoreSearch: true })) ?? (await cache.match("/")) ??
+    return (await cache.match("/")) ??
       new Response("Offline, and this page hasn't been saved yet.", { status: 504, headers: { "Content-Type": "text/plain" } });
   }
 }

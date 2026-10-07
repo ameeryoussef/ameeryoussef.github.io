@@ -14,9 +14,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="The Reach">
-  <script type="module" crossorigin src="/assets/home-D5drYoLc.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-BfOZZTSe.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-D_l-26T8.css">
+  <script type="module" crossorigin src="/assets/home-C5QXje2N.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-DGnvgDFx.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-DjQsHjL_.css">
 </head>
 <body>
   <main id="phone">
@@ -32,7 +32,7 @@
         <path d="M12 3.4v2.2M12 18.4v2.2M20.6 12h-2.2M5.6 12H3.4M18.08 5.92l-1.56 1.56M7.48 16.52l-1.56 1.56M18.08 18.08l-1.56-1.56M7.48 7.48 5.92 5.92" stroke-width="2.6"/>
       </svg>
     </button>
-    <section id="sky">
+    <section id="sky" data-detail="weather" role="button" tabindex="0" aria-label="Weather detail">
       <div class="sky-layer" id="sky-a"></div>
       <div class="sky-layer" id="sky-b"></div>
       <svg id="sky-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></svg>
@@ -62,14 +62,14 @@
       <div class="mini-attrib mono">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div>
 
       <div id="metrics">
-        <div class="metric" id="m-cond">
+        <div class="metric" id="m-cond" data-detail="conditions" role="button" tabindex="0" aria-label="Conditions detail">
           <div class="mlabel">Conditions</div>
           <div class="mval" id="cond-val">–</div>
           <div class="msub" id="cond-sub"></div>
           <svg id="cond-waves" viewBox="0 0 202 18" preserveAspectRatio="none" aria-hidden="true" fill="none"></svg>
         </div>
 
-        <div class="metric" id="m-tide">
+        <div class="metric" id="m-tide" data-detail="tide" role="button" tabindex="0" aria-label="Tide detail">
           <div class="mlabel">Tide</div>
           <div class="valrow">
             <div class="mval" id="tide-val">–</div>
@@ -79,7 +79,7 @@
           <svg id="tide-curve" viewBox="0 0 202 22" preserveAspectRatio="none" aria-hidden="true" fill="none"></svg>
         </div>
 
-        <div class="metric" id="m-wind">
+        <div class="metric" id="m-wind" data-detail="wind" role="button" tabindex="0" aria-label="Wind detail">
           <div class="mlabel">Wind</div>
           <div class="mval" id="wind-val">–</div>
           <div class="windrow">
@@ -96,6 +96,10 @@
         </div>
       </div>
     </div>
+
+    <!-- The detail screens (handoff v4) take the place of the sky and the readings; the day
+         chips and hour band below stay, so the hour carries into them and back. -->
+    <section id="detail" hidden></section>
 
     <section id="dialpanel">
       <div class="dial-head">

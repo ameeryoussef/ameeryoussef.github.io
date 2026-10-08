@@ -11,7 +11,7 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-aefb16e98e", DATA = "hc-data-b49c33bf03", MAP = "hc-map-eed97fcbd2";
+const SHELL = "hc-shell-989566819c", DATA = "hc-data-b49c33bf03", MAP = "hc-map-eed97fcbd2";
 const MAP_FILE = "/map/hudson.pmtiles";
 const DONE = "/__predictions-complete";   // marker: the whole year is saved, not just what was browsed
 
@@ -25,7 +25,7 @@ const APP_DATA = ["/data/fetch.json", "/data/stations.json"];
 // They are saved with the pages at install, so a new version is complete before it takes
 // over. They used to be saved only once a page had loaded them through the worker — so the
 // first open after every deploy needed the network for the app's own code.
-const ASSETS = ["/assets/chart-DLeQwBkQ.js","/assets/home-D01hdUDQ.js","/assets/offline-CeVVmEPX.js","/assets/offline-DtYTNpnb.css"];
+const ASSETS = ["/assets/chart-CqVCMzG4.js","/assets/home-IZ-AZtx9.js","/assets/offline-C_NS_MPr.js","/assets/offline-DoUrdiZg.css"];
 const CORE = [
   "/", "/chart.html", "/settings.html", "/manifest.webmanifest", ...ASSETS,
   "/favicon-32.png", "/favicon-64.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",

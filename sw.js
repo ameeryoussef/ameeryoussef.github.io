@@ -14,8 +14,10 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-956d6a8194", DATA = "hc-data-b49c33bf03";
-const AREAS = [{"id":"harbor","name":"New York Harbor & the Hudson","file":"/map/harbor.pmtiles","v":"3c5723c73d"},{"id":"sound","name":"Long Island Sound & the East End","file":"/map/sound.pmtiles","v":"c1910a62b0"}];                  // [{ id, name, file, v }]
+const SHELL = "hc-shell-70991cc315", DATA = "hc-data-b49c33bf03";
+// Each map lives on Cloudflare (the Worker in workers/maps), under a name that carries a
+// hash of its contents; `v` is that hash and `bytes` its size.
+const AREAS = [{"id":"harbor","name":"New York Harbor & the Hudson","file":"https://reach-maps.hudsoncurrents.workers.dev/harbor.46212272ac.pmtiles","v":"46212272ac","bytes":27500047},{"id":"sound","name":"Long Island Sound & the East End","file":"https://reach-maps.hudsoncurrents.workers.dev/sound.853f1d0418.pmtiles","v":"853f1d0418","bytes":40579808}];                  // [{ id, name, file, v, bytes }]
 const mapCache = a => `hc-map-${a.id}-${a.v}`;
 const areaByFile = new Map(AREAS.map(a => [a.file, a]));
 const areaById = new Map(AREAS.map(a => [a.id, a]));
@@ -32,7 +34,7 @@ const APP_DATA = ["/data/fetch.json", "/data/stations.json", "/data/areas.json"]
 // They are saved with the pages at install, so a new version is complete before it takes
 // over. They used to be saved only once a page had loaded them through the worker — so the
 // first open after every deploy needed the network for the app's own code.
-const ASSETS = ["/assets/chart-CrFsFzKz.js","/assets/home-CpG33tY0.js","/assets/offline-5jlLJ4NA.css","/assets/offline-68viltI9.js"];
+const ASSETS = ["/assets/chart-BJ7wZMXq.js","/assets/home-BGpljZt2.js","/assets/offline-5jlLJ4NA.css","/assets/offline-BI_C-oCo.js"];
 const CORE = [
   "/", "/chart.html", "/settings.html", "/manifest.webmanifest", ...ASSETS,
   "/favicon-32.png", "/favicon-64.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",
@@ -54,6 +56,7 @@ self.addEventListener("install", e => {
 
 self.addEventListener("activate", e => {
   e.waitUntil((async () => {
+    await carryMapsOver();
     for (const k of await caches.keys()) {
       if (![SHELL, DATA, ...AREAS.map(mapCache)].includes(k)) await caches.delete(k);
     }
@@ -61,13 +64,37 @@ self.addEventListener("activate", e => {
   })());
 });
 
+// A map a phone already saved, from when the maps sat beside the app (/map/harbor.pmtiles),
+// is the same file the new name points to if it is the same size to the byte: move it to
+// the new name rather than download it again. Anything else is left for the clean-up below.
+async function carryMapsOver() {
+  for (const area of AREAS) {
+    try {
+      const fresh = await caches.open(mapCache(area));
+      if (await fresh.match(area.file, { ignoreVary: true })) continue;
+      for (const k of await caches.keys()) {
+        if (!k.startsWith(`hc-map-${area.id}-`) || k === mapCache(area)) continue;
+        const old = await (await caches.open(k)).match(`/map/${area.id}.pmtiles`);
+        const blob = await old?.blob();
+        if (blob && blob.size === area.bytes) {
+          await fresh.put(area.file, new Response(blob, { headers: { "Content-Type": "application/octet-stream", "Content-Length": String(blob.size) } }));
+          break;
+        }
+      }
+    } catch { /* a failed carry-over only means the map downloads again */ }
+  }
+}
+
 // ── serving ──────────────────────────────────────────────────────────────────
 self.addEventListener("fetch", event => {
   const { request } = event;
   const url = new URL(request.url);
-  if (request.method !== "GET" || url.origin !== location.origin) return;   // live data goes to the network
+  if (request.method !== "GET") return;
+  // The maps come from Cloudflare, so they are checked before the same-origin rule below.
+  const map = areaByFile.get(url.origin + url.pathname);
+  if (map) return event.respondWith(serveMap(request, map));
+  if (url.origin !== location.origin) return;   // live data goes to the network
 
-  if (areaByFile.has(url.pathname)) return event.respondWith(serveMap(request, areaByFile.get(url.pathname)));
   if (APP_DATA.includes(url.pathname)) return event.respondWith(cacheFirst(request, SHELL));
   if (url.pathname.startsWith("/data/")) return event.respondWith(cacheFirst(request, DATA));
   if (request.mode === "navigate") return event.respondWith(page(request));
@@ -115,7 +142,7 @@ async function page(request) {
 // went blank with "Failed to fetch". Slicing one blob costs nothing.
 const blobs = new Map();                  // area id -> Promise<Blob | null>
 function savedMapBlob(area) {
-  if (!blobs.has(area.id)) blobs.set(area.id, caches.open(mapCache(area)).then(c => c.match(area.file)).then(r => r?.blob() ?? null)
+  if (!blobs.has(area.id)) blobs.set(area.id, caches.open(mapCache(area)).then(c => c.match(area.file, { ignoreVary: true })).then(r => r?.blob() ?? null)
     .catch(e => { blobs.delete(area.id); throw e; }));
   return blobs.get(area.id);
 }
@@ -179,7 +206,7 @@ async function saveArea(id, client, { metered }) {
     const data = await caches.open(DATA);
     if (!(await data.match(DONE(id)))) await savePredictions(area, client);
     const map = await caches.open(mapCache(area));
-    if (!(await map.match(area.file))) {
+    if (!(await map.match(area.file, { ignoreVary: true }))) {
       if (metered) say(client, { type: "deferred", what: "map", area: id, reason: "metered connection" });
       else await saveMap(area, client);
     }
@@ -267,7 +294,7 @@ async function report(client) {
   const areas = {};
   for (const a of AREAS) {
     const map = await caches.open(mapCache(a));
-    areas[a.id] = { map: !!(await map.match(a.file)), predictions: !!(await data.match(DONE(a.id))) };
+    areas[a.id] = { map: !!(await map.match(a.file, { ignoreVary: true })), predictions: !!(await data.match(DONE(a.id))) };
   }
   let quota = null;
   try { quota = await navigator.storage.estimate(); } catch {}

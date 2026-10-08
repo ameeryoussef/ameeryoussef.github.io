@@ -14,9 +14,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="The Reach">
-  <script type="module" crossorigin src="/assets/home-IZ-AZtx9.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-C_NS_MPr.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-DoUrdiZg.css">
+  <script type="module" crossorigin src="/assets/home-CpG33tY0.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-68viltI9.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-5jlLJ4NA.css">
 </head>
 <body>
   <main id="phone">
@@ -130,7 +130,9 @@
           <span id="station-current"></span>
           <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.4 L6 8.2 L10 4.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <div class="dd-wrap" id="station-wrap"><div class="dd-inner"><ul id="station-list" role="listbox" aria-labelledby="station-label"></ul></div></div>
+        <div class="dd-wrap" id="station-wrap"><div class="dd-inner">
+          <div class="dd-search"><input id="station-search" type="search" placeholder="Search ports" aria-label="Search ports" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+          <ul id="station-list" role="listbox" aria-labelledby="station-label"></ul></div></div>
       </div>
       <div class="mono rnote" id="station-note"></div>
     </div>
@@ -153,12 +155,18 @@
       <div class="mono rnote">For red-green colour blindness. Placid turns graphite and the bars deepen, so all four states stay apart.</div>
     </div>
 
-    <footer id="credits" class="row" style="--i:3">
+    <div class="row" style="--i:3">
+      <div class="rlabel">Offline</div>
+      <ul id="offline-list" class="offline-list" aria-live="polite"></ul>
+      <div class="mono rnote">Your home port's region is saved by itself. Save another before you sail there, and the chart, tides and currents work with no signal. Wind and warnings always need one.</div>
+    </div>
+
+    <footer id="credits" class="row" style="--i:4">
       <div class="mono">Base map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, under the Open Database Licence. Tiles by <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>.</div>
       <div class="mono">Weather data by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> — rounded for display, and converted to knots when that unit is chosen.</div>
       <div class="mono">Tides and currents from NOAA CO-OPS; warnings from the National Weather Service. Both are supplied as is, without warranty. Speeds between NOAA's published slack and maximum times are worked out by this app, so they are not official NOAA figures. Not endorsed by or affiliated with NOAA or the NWS.</div>
       <div class="mono">Wave heights are all estimated.</div>
-      <div class="mono">Charts, wind and tide predictions are downloaded for offline use.</div>
+      <div class="mono">Charts and tide and current predictions are saved for offline use region by region; the last wind forecast is kept too.</div>
       <div class="mono" id="cache-note"></div>
       <div class="mono"><a href="/licenses.txt" target="_blank" rel="noopener">Software licences</a></div>
       <div class="mono" id="not-nav">NOT FOR NAVIGATION</div>

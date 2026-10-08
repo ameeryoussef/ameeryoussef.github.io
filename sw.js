@@ -1,31 +1,38 @@
 // The Reach — offline.
 //
-// Three caches, kept apart because they are three different promises, and versioned
-// by what they hold (stamped at build time by scripts/stamp-sw.mjs) so a routine
-// deploy replaces the app without re-downloading the map:
+// Caches kept apart because they are different promises, and versioned by what they hold
+// (stamped at build time by scripts/stamp-sw.mjs) so a routine deploy replaces the app
+// without re-downloading maps:
 //   shell  the app itself: pages, script, styles, fonts, icons. New every deploy.
-//   data   the year of NOAA predictions, ~4 MB. Saved automatically.
-//   map    the 30 MB base map. Saved automatically too, but never over a connection
-//          the browser tells us is metered or in data-saver mode.
+//   data   NOAA's year of predictions, saved area by area.
+//   map    one cache per area's base map (src/areas.js), each versioned by its own file,
+//          so a new map for one area never costs a phone the others.
+//
+// The home port's area is saved automatically; others when Settings asks. A map is never
+// saved automatically over a connection the browser says is metered.
 //
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-989566819c", DATA = "hc-data-b49c33bf03", MAP = "hc-map-eed97fcbd2";
-const MAP_FILE = "/map/hudson.pmtiles";
-const DONE = "/__predictions-complete";   // marker: the whole year is saved, not just what was browsed
+const SHELL = "hc-shell-956d6a8194", DATA = "hc-data-b49c33bf03";
+const AREAS = [{"id":"harbor","name":"New York Harbor & the Hudson","file":"/map/harbor.pmtiles","v":"3c5723c73d"},{"id":"sound","name":"Long Island Sound & the East End","file":"/map/sound.pmtiles","v":"c1910a62b0"}];                  // [{ id, name, file, v }]
+const mapCache = a => `hc-map-${a.id}-${a.v}`;
+const areaByFile = new Map(AREAS.map(a => [a.file, a]));
+const areaById = new Map(AREAS.map(a => [a.id, a]));
+// Marker: this area's whole year is saved, not just what was browsed.
+const DONE = id => `/__predictions-complete-${id}`;
 
 // Two files sit under /data/ but belong to the app, not to NOAA: they change when the
 // app changes and they are small. Keeping them in the shell means editing them costs a
 // phone a few tens of kilobytes on the next open, instead of re-saving the whole 6 MB
 // year of predictions because the data cache was given a new name.
-const APP_DATA = ["/data/fetch.json", "/data/stations.json"];
+const APP_DATA = ["/data/fetch.json", "/data/stations.json", "/data/areas.json"];
 
 // The app's own scripts and styles, by their built names (filled in by scripts/stamp-sw.mjs).
 // They are saved with the pages at install, so a new version is complete before it takes
 // over. They used to be saved only once a page had loaded them through the worker — so the
 // first open after every deploy needed the network for the app's own code.
-const ASSETS = ["/assets/chart-CqVCMzG4.js","/assets/home-IZ-AZtx9.js","/assets/offline-C_NS_MPr.js","/assets/offline-DoUrdiZg.css"];
+const ASSETS = ["/assets/chart-CrFsFzKz.js","/assets/home-CpG33tY0.js","/assets/offline-5jlLJ4NA.css","/assets/offline-68viltI9.js"];
 const CORE = [
   "/", "/chart.html", "/settings.html", "/manifest.webmanifest", ...ASSETS,
   "/favicon-32.png", "/favicon-64.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",
@@ -48,7 +55,7 @@ self.addEventListener("install", e => {
 self.addEventListener("activate", e => {
   e.waitUntil((async () => {
     for (const k of await caches.keys()) {
-      if (![SHELL, DATA, MAP].includes(k)) await caches.delete(k);
+      if (![SHELL, DATA, ...AREAS.map(mapCache)].includes(k)) await caches.delete(k);
     }
     await self.clients.claim();
   })());
@@ -60,16 +67,20 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (request.method !== "GET" || url.origin !== location.origin) return;   // live data goes to the network
 
-  if (url.pathname === MAP_FILE) return event.respondWith(serveMap(request));
+  if (areaByFile.has(url.pathname)) return event.respondWith(serveMap(request, areaByFile.get(url.pathname)));
   if (APP_DATA.includes(url.pathname)) return event.respondWith(cacheFirst(request, SHELL));
   if (url.pathname.startsWith("/data/")) return event.respondWith(cacheFirst(request, DATA));
   if (request.mode === "navigate") return event.respondWith(page(request));
   event.respondWith(cacheFirst(request, SHELL));
 });
 
+// ignoreVary: a server that marks its files "Vary: Origin" (Vite's preview server does)
+// would otherwise never match the saved copy — the page's module scripts carry an Origin
+// header and the worker's saving requests don't — and offline, every script came back 504
+// and the app opened as bare text. These files never differ by origin.
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
-  const hit = await cache.match(request, { ignoreSearch: true });
+  const hit = await cache.match(request, { ignoreSearch: true, ignoreVary: true });
   if (hit) return hit;
   try {
     const res = await fetch(request);
@@ -88,7 +99,7 @@ async function cacheFirst(request, cacheName) {
 // the next worker, which saves its pages and scripts together before it takes over.
 async function page(request) {
   const cache = await caches.open(SHELL);
-  const saved = await cache.match(request, { ignoreSearch: true });
+  const saved = await cache.match(request, { ignoreSearch: true, ignoreVary: true });
   if (saved) return saved;
   try {
     return await fetch(request);
@@ -98,28 +109,28 @@ async function page(request) {
   }
 }
 
-// The saved map, read out of the cache once and kept for as long as this worker lives.
+// Each saved map, read out of its cache once and kept for as long as this worker lives.
 // Reading it per request instead — a fresh 50 MB blob for every tile — ran the browser
 // out of memory the moment a wide zoom asked for twenty tiles at once, and the chart
 // went blank with "Failed to fetch". Slicing one blob costs nothing.
-let mapBlob = null;
-function savedMapBlob() {
-  if (!mapBlob) mapBlob = caches.open(MAP).then(c => c.match(MAP_FILE)).then(r => r?.blob() ?? null)
-    .catch(e => { mapBlob = null; throw e; });
-  return mapBlob;
+const blobs = new Map();                  // area id -> Promise<Blob | null>
+function savedMapBlob(area) {
+  if (!blobs.has(area.id)) blobs.set(area.id, caches.open(mapCache(area)).then(c => c.match(area.file)).then(r => r?.blob() ?? null)
+    .catch(e => { blobs.delete(area.id); throw e; }));
+  return blobs.get(area.id);
 }
 
-// The map is read in byte ranges. Once saved, ranges are served from the stored copy.
-async function serveMap(request) {
-  const blob = await savedMapBlob();
+// Maps are read in byte ranges. Once saved, ranges are served from the stored copy.
+async function serveMap(request, area) {
+  const blob = await savedMapBlob(area);
   if (!blob) {
     try { return await fetch(request); }
-    catch { return new Response("The chart map isn't saved for offline use.", { status: 504 }); }
+    catch { return new Response(`${area.name} isn't saved for offline use.`, { status: 504 }); }
   }
   const range = request.headers.get("range");
   if (!range) return new Response(blob, { status: 200, headers: { "Accept-Ranges": "bytes", "Content-Type": "application/octet-stream" } });
   const [, from, to] = /bytes=(\d*)-(\d*)/.exec(range) ?? [];
-  const start = Number(from || 0), end = to ? Number(to) : blob.size - 1;
+  const start = Number(from || 0), end = to ? Math.min(Number(to), blob.size - 1) : blob.size - 1;
   const part = blob.slice(start, end + 1);
   return new Response(part, {
     status: 206,
@@ -132,48 +143,64 @@ async function serveMap(request) {
   });
 }
 
-// ── saving, on request from Settings ─────────────────────────────────────────
+// ── saving ───────────────────────────────────────────────────────────────────
+// One job at a time, in the order asked: an automatic save and a tap on Save never race
+// each other for the same files.
+let queue = Promise.resolve(), busy = null;
+const enqueue = job => (queue = queue.then(job, job));
+
 self.addEventListener("message", event => {
   const { type } = event.data ?? {};
-  // The app asks for this on every load; both saves are skipped when already done.
-  if (type === "ensure") event.waitUntil(ensureSaved(event.data, event.source));
-  if (type === "save-predictions") event.waitUntil(savePredictions(event.source));
-  if (type === "save-map") event.waitUntil(saveMap(event.source));
-  if (type === "forget") event.waitUntil(forget(event.data.what, event.source));
-  if (type === "status") event.waitUntil(report(event.source));
+  const client = event.source;
+  // The app sends this on every load with the areas it wants kept: the home port's, and
+  // any saved from Settings. Anything already saved is skipped.
+  if (type === "ensure") event.waitUntil(enqueue(() => ensureSaved(event.data, client)));
+  // A tap on Save is asked for: it goes ahead on any connection.
+  if (type === "save-area") event.waitUntil(enqueue(() => saveArea(event.data.area, client, { metered: false })));
+  if (type === "forget-area") event.waitUntil(enqueue(() => forgetArea(event.data.area, client)));
+  if (type === "status") event.waitUntil(report(client));
 });
 
 const say = (client, msg) => client?.postMessage(msg);
 
-// Save what's missing, without being asked twice. `metered` comes from the page, which
-// is the only place that can see the connection; browsers that can't tell (Safari)
-// report nothing and we go ahead — 34 MB once, not on a schedule.
-let saving = false;
-async function ensureSaved({ metered = false, mapOptOut = false } = {}, client) {
-  if (saving) return;
-  saving = true;
+// `metered` comes from the page, which is the only place that can see the connection;
+// browsers that can't tell (Safari) report nothing and we go ahead — one area's map once,
+// not on a schedule.
+async function ensureSaved({ metered = false, areas = [] } = {}, client) {
+  for (const id of areas) if (areaById.has(id)) await saveArea(id, client, { metered });
+  await report(client);
+}
+
+async function saveArea(id, client, { metered }) {
+  const area = areaById.get(id);
+  if (!area) return;
+  busy = id;
   try {
     const data = await caches.open(DATA);
-    if (!(await data.match(DONE))) await savePredictions(client);
-    const map = await caches.open(MAP);
-    if (!(await map.match(MAP_FILE))) {
-      if (metered) say(client, { type: "deferred", what: "map", reason: "metered connection" });
-      else if (!mapOptOut) await saveMap(client);
+    if (!(await data.match(DONE(id)))) await savePredictions(area, client);
+    const map = await caches.open(mapCache(area));
+    if (!(await map.match(area.file))) {
+      if (metered) say(client, { type: "deferred", what: "map", area: id, reason: "metered connection" });
+      else await saveMap(area, client);
     }
   } finally {
-    saving = false;
+    busy = null;
     await report(client);
   }
 }
 
-async function savePredictions(client) {
+async function areaList() {
+  const res = await fetch(fresh("/data/areas.json"));
+  if (!res.ok) throw new Error(`area list: HTTP ${res.status}`);
+  return (await res.json()).areas;
+}
+
+async function savePredictions(area, client) {
   try {
     const cache = await caches.open(DATA);
-    const list = await (await fetch(fresh("/data/stations.json"))).json();
-    const urls = [
-      ...list.stations.filter(s => s.type !== "W").map(s => `/data/currents/${s.id}.json`),
-      ...list.tideStations.map(t => `/data/tides/${t.id}.json`),
-    ];
+    const entry = (await areaList()).find(a => a.id === area.id);
+    if (!entry) throw new Error(`no station list for ${area.name}`);
+    const urls = [...entry.currents.map(id => `/data/currents/${id}.json`), ...entry.tides.map(id => `/data/tides/${id}.json`)];
     let done = 0;
     for (const url of urls) {
       if (!(await cache.match(url))) {
@@ -181,63 +208,73 @@ async function savePredictions(client) {
         if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
         await cache.put(url, res);
       }
-      say(client, { type: "progress", what: "predictions", done: ++done, total: urls.length });
+      say(client, { type: "progress", what: "predictions", area: area.id, done: ++done, total: urls.length });
     }
-    await cache.put(DONE, new Response(JSON.stringify({ at: Date.now(), files: urls.length }), { headers: { "Content-Type": "application/json" } }));
-    say(client, { type: "saved", what: "predictions" });
+    await cache.put(DONE(area.id), new Response(JSON.stringify({ at: Date.now(), files: urls.length }), { headers: { "Content-Type": "application/json" } }));
+    say(client, { type: "saved", what: "predictions", area: area.id });
   } catch (e) {
-    say(client, { type: "failed", what: "predictions", error: String(e.message || e) });
+    say(client, { type: "failed", what: "predictions", area: area.id, error: String(e.message || e) });
   }
-  await report(client);
 }
 
-async function saveMap(client) {
+async function saveMap(area, client) {
   try {
-    const cache = await caches.open(MAP);
-    const res = await fetch(fresh(MAP_FILE));
+    const cache = await caches.open(mapCache(area));
+    const res = await fetch(fresh(area.file));
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const total = Number(res.headers.get("content-length")) || 0;
     const reader = res.body.getReader();
     const chunks = [];
-    let got = 0;
+    let got = 0, told = 0;
     for (;;) {
       const { done, value } = await reader.read();
       if (done) break;
       chunks.push(value);
       got += value.byteLength;
-      say(client, { type: "progress", what: "map", done: got, total });
+      if (got - told > 256 * 1024 || got === total) { told = got; say(client, { type: "progress", what: "map", area: area.id, done: got, total }); }
     }
     const blob = new Blob(chunks, { type: "application/octet-stream" });
-    await cache.put(MAP_FILE, new Response(blob, { headers: { "Content-Type": "application/octet-stream", "Content-Length": String(blob.size) } }));
-    mapBlob = null;                                   // the saved copy changed; read it again
-    say(client, { type: "saved", what: "map" });
+    await cache.put(area.file, new Response(blob, { headers: { "Content-Type": "application/octet-stream", "Content-Length": String(blob.size) } }));
+    blobs.delete(area.id);                          // the saved copy changed; read it again
+    say(client, { type: "saved", what: "map", area: area.id });
   } catch (e) {
     // Quota is the usual reason on a phone; pass the real message through.
-    say(client, { type: "failed", what: "map", error: String(e.message || e) });
+    say(client, { type: "failed", what: "map", area: area.id, error: String(e.message || e) });
+  }
+}
+
+// Removing an area takes its map and its predictions. The page never asks this of the
+// home port's area.
+async function forgetArea(id, client) {
+  const area = areaById.get(id);
+  if (!area) return;
+  blobs.delete(id);
+  await caches.delete(mapCache(area));
+  try {
+    const entry = (await areaList()).find(a => a.id === id);
+    const cache = await caches.open(DATA);
+    await cache.delete(DONE(id));
+    for (const sid of entry?.currents ?? []) await cache.delete(`/data/currents/${sid}.json`);
+    for (const sid of entry?.tides ?? []) await cache.delete(`/data/tides/${sid}.json`);
+  } catch (e) {
+    say(client, { type: "failed", what: "forget", area: id, error: String(e.message || e) });
   }
   await report(client);
 }
 
-async function forget(what, client) {
-  if (what === "map") mapBlob = null;
-  await caches.delete(what === "map" ? MAP : DATA);
-  await report(client);
-}
-
 async function report(client) {
-  const data = await caches.open(DATA), map = await caches.open(MAP);
-  const dataKeys = await data.keys();
-  const predictionsComplete = !!(await data.match(DONE));
-  const mapSaved = !!(await map.match(MAP_FILE));
+  const data = await caches.open(DATA);
+  const areas = {};
+  for (const a of AREAS) {
+    const map = await caches.open(mapCache(a));
+    areas[a.id] = { map: !!(await map.match(a.file)), predictions: !!(await data.match(DONE(a.id))) };
+  }
   let quota = null;
   try { quota = await navigator.storage.estimate(); } catch {}
   say(client, {
     type: "status",
     at: Date.now(),          // the client ignores a status older than the one it has
-    predictions: predictionsComplete ? dataKeys.length - 1 : 0,
-    predictionsComplete,
-    map: mapSaved,
-    saving,
+    areas, busy,
     usage: quota?.usage ?? null,
     quota: quota?.quota ?? null,
   });

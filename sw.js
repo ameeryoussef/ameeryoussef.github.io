@@ -14,7 +14,7 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-a918a984c0", DATA = "hc-data-ed1b4c42fe";
+const SHELL = "hc-shell-5777a8a850", DATA = "hc-data-ed1b4c42fe";
 // Each map lives on Cloudflare (the Worker in workers/maps), under a name that carries a
 // hash of its contents; `v` is that hash and `bytes` its size.
 const AREAS = [{"id":"harbor","name":"New York Harbor & the Hudson","file":"https://reach-maps.hudsoncurrents.workers.dev/harbor.46212272ac.pmtiles","v":"46212272ac","bytes":27500047},{"id":"sound","name":"Long Island Sound & the East End","file":"https://reach-maps.hudsoncurrents.workers.dev/sound.853f1d0418.pmtiles","v":"853f1d0418","bytes":40579808},{"id":"njshore","name":"The New Jersey Shore","file":"https://reach-maps.hudsoncurrents.workers.dev/njshore.4afdca0578.pmtiles","v":"4afdca0578","bytes":12810129},{"id":"sne","name":"Rhode Island, Buzzards Bay & the Cape","file":"https://reach-maps.hudsoncurrents.workers.dev/sne.33fb761e53.pmtiles","v":"33fb761e53","bytes":25677656},{"id":"massbay","name":"Massachusetts Bay to Portsmouth","file":"https://reach-maps.hudsoncurrents.workers.dev/massbay.c33e02930e.pmtiles","v":"c33e02930e","bytes":13332467},{"id":"maine","name":"Maine","file":"https://reach-maps.hudsoncurrents.workers.dev/maine.bcff11b57c.pmtiles","v":"bcff11b57c","bytes":19116022}];                  // [{ id, name, file, v, bytes }]
@@ -34,7 +34,7 @@ const APP_DATA = ["/data/fetch.json", "/data/stations.json", "/data/areas.json"]
 // They are saved with the pages at install, so a new version is complete before it takes
 // over. They used to be saved only once a page had loaded them through the worker — so the
 // first open after every deploy needed the network for the app's own code.
-const ASSETS = ["/assets/chart-BxQ7uabP.js","/assets/home-CCQa73EU.js","/assets/offline-Dq2Sunlf.css","/assets/offline-elKkw0h5.js"];
+const ASSETS = ["/assets/chart-VPd59HZr.js","/assets/home-Ztg0FdN2.js","/assets/offline-CC4dD8VJ.css","/assets/offline-Qyq04PNo.js"];
 const CORE = [
   "/", "/chart.html", "/settings.html", "/manifest.webmanifest", ...ASSETS,
   "/favicon-32.png", "/favicon-64.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",

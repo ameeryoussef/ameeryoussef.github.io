@@ -14,10 +14,10 @@
 // Wind and warnings are live by nature: they are never cached here. Offline, the app
 // shows the last forecast it fetched with its age, and says it cannot check warnings.
 
-const SHELL = "hc-shell-70991cc315", DATA = "hc-data-b49c33bf03";
+const SHELL = "hc-shell-30a6b8b167", DATA = "hc-data-a9c103cc97";
 // Each map lives on Cloudflare (the Worker in workers/maps), under a name that carries a
 // hash of its contents; `v` is that hash and `bytes` its size.
-const AREAS = [{"id":"harbor","name":"New York Harbor & the Hudson","file":"https://reach-maps.hudsoncurrents.workers.dev/harbor.46212272ac.pmtiles","v":"46212272ac","bytes":27500047},{"id":"sound","name":"Long Island Sound & the East End","file":"https://reach-maps.hudsoncurrents.workers.dev/sound.853f1d0418.pmtiles","v":"853f1d0418","bytes":40579808}];                  // [{ id, name, file, v, bytes }]
+const AREAS = [{"id":"harbor","name":"New York Harbor & the Hudson","file":"https://reach-maps.hudsoncurrents.workers.dev/harbor.46212272ac.pmtiles","v":"46212272ac","bytes":27500047},{"id":"sound","name":"Long Island Sound & the East End","file":"https://reach-maps.hudsoncurrents.workers.dev/sound.853f1d0418.pmtiles","v":"853f1d0418","bytes":40579808},{"id":"njshore","name":"The New Jersey Shore","file":"https://reach-maps.hudsoncurrents.workers.dev/njshore.4afdca0578.pmtiles","v":"4afdca0578","bytes":12810129}];                  // [{ id, name, file, v, bytes }]
 const mapCache = a => `hc-map-${a.id}-${a.v}`;
 const areaByFile = new Map(AREAS.map(a => [a.file, a]));
 const areaById = new Map(AREAS.map(a => [a.id, a]));
@@ -34,7 +34,7 @@ const APP_DATA = ["/data/fetch.json", "/data/stations.json", "/data/areas.json"]
 // They are saved with the pages at install, so a new version is complete before it takes
 // over. They used to be saved only once a page had loaded them through the worker — so the
 // first open after every deploy needed the network for the app's own code.
-const ASSETS = ["/assets/chart-BJ7wZMXq.js","/assets/home-BGpljZt2.js","/assets/offline-5jlLJ4NA.css","/assets/offline-BI_C-oCo.js"];
+const ASSETS = ["/assets/chart-D2h5Vukl.js","/assets/home-CcQLLfSj.js","/assets/offline-BzGn8-pd.js","/assets/offline-CLJ7qito.css"];
 const CORE = [
   "/", "/chart.html", "/settings.html", "/manifest.webmanifest", ...ASSETS,
   "/favicon-32.png", "/favicon-64.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/licenses.txt",

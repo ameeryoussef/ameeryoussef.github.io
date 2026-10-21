@@ -14,9 +14,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="The Reach">
-  <script type="module" crossorigin src="/assets/chart-D0NoEDT2.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-CkNXtafW.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-4sVnGMWD.css">
+  <script type="module" crossorigin src="/assets/chart-BPAJ4nRz.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/offline-BjnCR6Dc.js">
+  <link rel="stylesheet" crossorigin href="/assets/offline-DyQFb5tV.css">
 </head>
 <body>
   <!-- The full map (October handoff, option 1b): the chart edge to edge, with the
@@ -26,7 +26,7 @@
     <div id="map"></div>
     <div id="noread" aria-hidden="true"></div>
     <div id="mk"></div>
-    <div id="map-msg" class="mono" hidden></div>
+    <div id="map-msg" hidden></div>
 
     <section id="topcard" class="fcard" aria-label="Readings">
       <div class="tc-head">
@@ -67,12 +67,12 @@
     </section>
 
     <button id="info-btn" class="fbtn" type="button" aria-label="What the map shows, and sources" aria-expanded="false">i</button>
-    <div id="info-panel" class="mono fcard" hidden>
+    <div id="info-panel" class="fcard" hidden>
       <div>Labelled arrows are NOAA station predictions. The small arrows between them are worked out from the nearest stations in the same waterway — the pattern of the stream, not a reading.</div>
       <div>Drag the map and the readings follow the port of call nearest its centre.</div>
       <div>Base map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, ODbL. Tiles by <a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a>. Weather by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Tides and currents: NOAA CO-OPS. Warnings: National Weather Service. As is, no warranty, no endorsement.</div>
       <div><a href="/?settings=1">All sources and licences</a></div>
-      <div id="info-nav">NOT FOR NAVIGATION</div>
+      <div id="info-nav" class="mono">NOT FOR NAVIGATION</div>
     </div>
     <div id="layers">
       <button id="layers-btn" class="fbtn" type="button" aria-label="Map layers" aria-expanded="false">

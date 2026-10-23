@@ -1,7 +1,7 @@
 {
-  "name": "The Reach",
-  "short_name": "The Reach",
-  "description": "Tide and current planning for the Hudson River and New York Harbor. Not for navigation.",
+  "name": "High Water",
+  "short_name": "High Water",
+  "description": "Tides, currents and conditions for inshore waters from Maine to Florida. For planning only; not for navigation.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

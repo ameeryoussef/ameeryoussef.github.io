@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>High Water · Welcome</title>
+  <meta name="description" content="Tides, currents and conditions for inshore waters from Maine to Florida. For planning only; not for navigation.">
+  <link rel="icon" href="/favicon-64.png" type="image/png" sizes="64x64">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#f6fcfc">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="High Water">
+  <script type="module" crossorigin src="/assets/welcome-0DVQ53Jn.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/basemap-DtDYcd4u.js">
+  <link rel="modulepreload" crossorigin href="/assets/port-search-UeuAM0Oy.js">
+  <link rel="stylesheet" crossorigin href="/assets/basemap-QkunhA6s.css">
+</head>
+<body>
+  <!-- First run (handoff 10-23): three screens, skippable on the first two. -->
+  <main id="ob">
+    <section class="ob-screen" data-step="1" aria-label="Welcome">
+      <div class="ob-progress" aria-hidden="true"><span class="on"></span><span></span><span></span></div>
+      <div class="ob-top">
+        <h1>Welcome to High Water</h1>
+        <p class="ob-lede">We show tides, currents, and conditions for inshore waters, from Maine to Florida.</p>
+        <p class="ob-note"><b>Please note</b>: For planning only. Not for navigation or open sea. Always follow Coast Guard alerts and your own instruments.</p>
+      </div>
+      <div class="ob-divider" style="margin: 30px 0 24px"></div>
+      <div class="ob-home">
+        <h2 class="ob-q" id="ob-q">Where do you usually leave from?</h2>
+        <div id="ob-search" aria-labelledby="ob-q"></div>
+        <p class="ob-foot">You can change this anytime in Settings.</p>
+      </div>
+      <div class="ob-spacer"></div>
+      <button class="ob-primary" type="button" data-next>Continue</button>
+      <button class="ob-skip" type="button" data-skip>Skip</button>
+    </section>
+
+    <section class="ob-screen" data-step="2" aria-label="Reading the colors" hidden>
+      <div class="ob-progress" aria-hidden="true"><span class="on"></span><span class="on"></span><span></span></div>
+      <h2 class="ob-title">Reading the colors</h2>
+      <div class="ob-legend">
+        <div class="ob-state" data-s="placid">Placid<i></i></div><div class="ob-def">Flat water, barely a breeze.</div>
+        <div class="ob-state" data-s="calm">Calm<i></i></div><div class="ob-def">Light wind, a small ripple.</div>
+        <div class="ob-state" data-s="chop">Chop<i></i></div><div class="ob-def">Workable but bumpy, often wind against the tide.</div>
+        <div class="ob-state" data-s="rough">Rough<i></i></div><div class="ob-def">Stay in. Conditions are unpleasant or dangerous. Includes Small Craft Advisories.</div>
+      </div>
+      <div class="ob-divider" style="margin: 16px 0 14px"></div>
+      <div class="ob-chips"><div id="daily-days" role="tablist" aria-label="Day"></div></div>
+      <p class="ob-help" style="padding-top: 8px">Each day takes the color of its daylight hours. Tap one to see the forecast.</p>
+      <div class="ob-rating"><span class="w" id="ob-word">…</span><span class="r" id="ob-why"></span></div>
+      <div class="hour-block" style="padding-top: 6px">
+        <div class="bubble-row"><div class="mono" id="hour-bubble"></div></div>
+        <div id="daily-hours" role="slider" tabindex="0" aria-label="Hour" aria-valuemin="0" aria-valuemax="23"></div>
+        <div id="daily-scale"></div>
+      </div>
+      <p class="ob-help" style="padding-top: 8px">Drag through the hours to see how the forecast changes.</p>
+      <div class="ob-divider" style="margin: 14px 0"></div>
+      <div class="ob-chart">
+        <div class="ob-thumb" aria-hidden="true">
+          <div id="ob-mini"></div><div id="ob-mini-mk"></div>
+          <div class="tag" id="ob-tag"></div>
+          <div class="exp"><svg viewBox="0 0 24 24" fill="none" stroke="oklch(0.33 0.04 240)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4H20v5.5M20 4l-6.2 6.2M9.5 20H4v-5.5M4 20l6.2-6.2"/></svg></div>
+        </div>
+        <p class="ob-help">Tap the chart to open it. Arrows show the current. Longer and heavier means faster. Tap a station to read its conditions for the selected hour.</p>
+      </div>
+      <div class="ob-spacer"></div>
+      <button class="ob-primary" type="button" data-next>Continue</button>
+      <button class="ob-skip" type="button" data-skip>Skip</button>
+    </section>
+
+    <section class="ob-screen" data-step="3" aria-label="Where the numbers come from" hidden>
+      <div class="ob-progress" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="on"></span></div>
+      <h2 class="ob-title">Where the numbers come from</h2>
+      <div style="padding-top: 16px">
+        <div class="ob-src"><div class="ob-label">Tides and currents</div><p>Tide data comes from National Oceanic and Atmospheric Administration (NOAA) predictions. They follow the moon, so they hold months ahead.</p></div>
+        <div class="ob-src"><div class="ob-label">Wind and weather</div><p>Forecast models. Sharpest for the next day or two, looser after that.</p></div>
+        <div class="ob-src"><div class="ob-label">Waves</div><p>Calculated from the wind and how much open water it crosses, plus any National Weather Service advisories.</p></div>
+      </div>
+      <p class="ob-foot" style="padding-top: 16px">The full list lives under Sources on the Settings page.</p>
+      <div class="ob-spacer"></div>
+      <div class="ob-nav">FOR PLANNING ONLY. NOT FOR NAVIGATION.</div>
+      <button class="ob-primary" type="button" data-start>Start</button>
+      <!-- No Skip here: the same space, so Start sits where Continue did. -->
+      <button class="ob-skip ghost" type="button" tabindex="-1" aria-hidden="true">Skip</button>
+    </section>
+  </main>
+</body>
+</html>

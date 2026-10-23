@@ -3,8 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>The Reach</title>
-  <meta name="description" content="Tide and current planning for the Hudson River and New York Harbor. Not for navigation.">
+  <title>High Water</title>
+  <script>
+    // First run: onboarding comes first for anyone who has neither finished it nor chosen a
+    // home port, unless a link carries them to a particular place or hour. ?welcome=1 shows it
+    // again. Before anything paints, so the home screen never flashes.
+    (function () {
+      try {
+        var q = new URLSearchParams(location.search);
+        var fresh = !localStorage.getItem("hc-onboarded") && !localStorage.getItem("hc-loc") && !q.has("loc") && !q.has("t") && !q.has("d") && !q.has("settings");
+        if (q.get("welcome") === "1" || fresh) location.replace("/welcome.html");
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="description" content="Tides, currents and conditions for inshore waters from Maine to Florida. For planning only; not for navigation.">
   <link rel="icon" href="/favicon-64.png" type="image/png" sizes="64x64">
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="stylesheet" href="/fonts/fonts.css">
@@ -13,10 +25,12 @@
   <meta name="theme-color" content="#9fd8e8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="The Reach">
-  <script type="module" crossorigin src="/assets/home-DFtPGIJk.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/offline-BjnCR6Dc.js">
-  <link rel="stylesheet" crossorigin href="/assets/offline-DyQFb5tV.css">
+  <meta name="apple-mobile-web-app-title" content="High Water">
+  <script type="module" crossorigin src="/assets/home-hahA2UzE.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/basemap-DtDYcd4u.js">
+  <link rel="modulepreload" crossorigin href="/assets/port-search-UeuAM0Oy.js">
+  <link rel="modulepreload" crossorigin href="/assets/offline-Bjtyv4Xv.js">
+  <link rel="stylesheet" crossorigin href="/assets/basemap-QkunhA6s.css">
 </head>
 <body>
   <main id="phone">

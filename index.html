@@ -10,6 +10,14 @@
     // again. Before anything paints, so the home screen never flashes.
     (function () {
       try {
+        // A one-time reset (23 Oct 2026) so the two people already using the app meet the
+        // first run as a new person would: their home port and onboarding are forgotten once.
+        // Offline regions and other settings stay. Bump FIRST_RUN to do it again.
+        var FIRST_RUN = "2026-10-23";
+        if (localStorage.getItem("hc-firstrun") !== FIRST_RUN) {
+          ["hc-onboarded", "hc-loc", "hudson.station"].forEach(function (k) { localStorage.removeItem(k); });
+          localStorage.setItem("hc-firstrun", FIRST_RUN);
+        }
         var q = new URLSearchParams(location.search);
         var fresh = !localStorage.getItem("hc-onboarded") && !localStorage.getItem("hc-loc") && !q.has("loc") && !q.has("t") && !q.has("d") && !q.has("settings");
         if (q.get("welcome") === "1" || fresh) location.replace("/welcome.html");

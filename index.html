@@ -34,11 +34,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="High Water">
-  <script type="module" crossorigin src="/assets/home-28cGQaCI.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/basemap-DJDG63l2.js">
-  <link rel="modulepreload" crossorigin href="/assets/port-search-BHQPeywZ.js">
-  <link rel="modulepreload" crossorigin href="/assets/offline-igNFGP-Q.js">
-  <link rel="stylesheet" crossorigin href="/assets/basemap-CdMw2Cx4.css">
+  <script type="module" crossorigin src="/assets/home-BgbUHMbw.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/basemap-_YupNPJq.js">
+  <link rel="modulepreload" crossorigin href="/assets/port-search-C5b3vVeF.js">
+  <link rel="modulepreload" crossorigin href="/assets/offline-DEK05LeQ.js">
+  <link rel="stylesheet" crossorigin href="/assets/basemap-Dc8w_jO0.css">
 </head>
 <body>
   <main id="phone">
@@ -68,6 +68,13 @@
         <div class="mono" id="sky-conf"></div>
       </div>
     </section>
+
+    <!-- A Weather Service warning or advisory in effect at the hour shown: its name, when it
+         ends, and its own WHAT line. Taps through to Conditions. -->
+    <div id="advisory" data-detail="conditions" role="button" tabindex="0" aria-label="Conditions detail" hidden>
+      <div class="mono" id="adv-label"></div>
+      <div id="adv-what"></div>
+    </div>
 
     <div id="middle">
       <a id="mini-wrap" href="/chart.html" aria-label="Open the full chart">
